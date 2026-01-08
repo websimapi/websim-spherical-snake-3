@@ -49,6 +49,8 @@ body, html {
     flex-direction: column;
     align-items: center;
     gap: 5px;
+    /* Hidden until avatar image is fully loaded */
+    visibility: hidden;
 }
 
 #player-avatar {

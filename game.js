@@ -41,21 +41,47 @@ export class Game {
         this.playerInfo = info;
         const avatarEl = document.getElementById('player-avatar');
         const nameEl = document.getElementById('player-name');
-        
-        if (avatarEl) {
-            if (info.avatarUrl) {
-                avatarEl.src = info.avatarUrl;
-                // Fallback if image fails to load
-                avatarEl.onerror = () => {
-                    avatarEl.src = './default_avatar.png';
-                    avatarEl.onerror = null;
-                };
-            } else {
-                avatarEl.src = './default_avatar.png';
-            }
+        const identityEl = document.getElementById('player-identity');
+
+        // Always set name immediately if available
+        if (nameEl && info.username) {
+            nameEl.textContent = info.username;
         }
-        
-        if(nameEl && info.username) nameEl.textContent = info.username;
+
+        // If we don't have an avatar element, nothing more to do
+        if (!avatarEl) return;
+
+        // Hide the identity UI until we have a fully loaded image
+        if (identityEl) {
+            identityEl.style.visibility = 'hidden';
+        }
+
+        const fallbackUrl = './default_avatar.png';
+        const primaryUrl = info.avatarUrl || fallbackUrl;
+
+        const tryLoad = (urlList, index = 0) => {
+            if (index >= urlList.length) {
+                // No image could be loaded; keep UI hidden
+                return;
+            }
+
+            const url = urlList[index];
+            const img = new Image();
+            img.onload = () => {
+                avatarEl.src = url;
+                if (identityEl) {
+                    identityEl.style.visibility = 'visible';
+                }
+            };
+            img.onerror = () => {
+                // Try next URL in the list
+                tryLoad(urlList, index + 1);
+            };
+            img.src = url;
+        };
+
+        // Prefer provided avatar, then fallback to default
+        tryLoad([primaryUrl === fallbackUrl ? fallbackUrl : primaryUrl, fallbackUrl]);
     }
 
     init() {
