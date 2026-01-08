@@ -41,7 +41,7 @@ export class Game {
         this.playerInfo = info;
         const avatarEl = document.getElementById('player-avatar');
         const nameEl = document.getElementById('player-name');
-        const identityEl = document.getElementById('player-identity');
+        const playerCardEl = document.getElementById('player-card');
 
         // Always set name immediately if available
         if (nameEl && info.username) {
@@ -51,17 +51,12 @@ export class Game {
         // If we don't have an avatar element, nothing more to do
         if (!avatarEl) return;
 
-        // Hide the identity UI until we have a fully loaded image
-        if (identityEl) {
-            identityEl.style.visibility = 'hidden';
-        }
-
         const fallbackUrl = './default_avatar.png';
         const primaryUrl = info.avatarUrl || fallbackUrl;
 
         const tryLoad = (urlList, index = 0) => {
             if (index >= urlList.length) {
-                // No image could be loaded; keep UI hidden
+                // No image could be loaded; leave card hidden
                 return;
             }
 
@@ -69,8 +64,9 @@ export class Game {
             const img = new Image();
             img.onload = () => {
                 avatarEl.src = url;
-                if (identityEl) {
-                    identityEl.style.visibility = 'visible';
+                if (playerCardEl) {
+                    // Fade in avatar, username, and score together
+                    playerCardEl.classList.add('visible');
                 }
             };
             img.onerror = () => {
