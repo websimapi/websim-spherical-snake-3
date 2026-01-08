@@ -64,6 +64,8 @@ export class Game {
             const img = new Image();
             img.onload = () => {
                 avatarEl.src = url;
+                // Once avatar (or fallback) is ready, fade in the whole experience together
+                document.body.classList.add('ready');
                 if (playerCardEl) {
                     // Fade in avatar, username, and score together
                     playerCardEl.classList.add('visible');

@@ -35,8 +35,7 @@ scene.add(hemiLight);
 // Initialize Game
 const game = new Game(scene, camera, renderer);
 
-// Mark the game as ready so the scene and UI can fade in
-document.body.classList.add('ready');
+
 
 // Setup User Info via WebsimSocket
 const room = new WebsimSocket();
